@@ -1,8 +1,12 @@
+# Weather Sankey
+
 Using Sankey diagram to visualize historical weather data gives you a different aspect of statistics. Weather conditions are on the top, and the dates of the month are on the bottom. Each color represents a different weather condtion, it highlighs the corresponding dates as you hover over the conditions. The whole picture is simple yet very effective on showing how the conditions are distributed.
 
 The line chart on the bottom represents the trend of daily temperatures. As you hover across the chart, a reference line will follow along with high/low temperatures appearing on the side.
 
-Additionally, I encapsulated the whole visualization into the **WeatherChart** class to make it highly reusable, **see below for the API Reference**.
+[<img src="https://github.com/analyzer2004/weathersankey/blob/master/images/cover.png" width="960">]
+
+
 
 <div style="font-size:10pt; font-style:italic">Icons made by <a href="https://www.flaticon.com/authors/bqlqn" title="bqlqn">bqlqn</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></div>
 
