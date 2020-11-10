@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        .days {
+            font-family: Tahoma;
+            font-size: 20pt;
+            font-weight: bold
+        }
+
+        .date {
+            font-size: 11pt
+        }
+    </style>
+</head>
+<body>
+    <script src="//d3js.org/d3.v6.min.js"></script>
+    <script src="../src/weather.js"></script>
+    <script src="//unpkg.com/d3-sankey@0"></script>
+    <script>
+
+        var width = 1024, height = 768;
+
+        const weatherIcons = {
+            clear: "images/clear.svg",
+            cloudy: "images/cloudy.svg",
+            overcast: "images/overcast.svg",
+            rain: "images/rain.svg",
+            snow: "images/snow.svg"
+        }
+
+        d3.csv("seattle_19.csv", d3.autoType).then(function (data) {
+
+            const svg = d3.select("body").append("svg")
+                .attr("cursor", "default")
+                .attr("font-size", "11pt")
+                .attr("width", width)
+                .attr("height", height);            
+
+            data = data.filter(d => new Date(d["date"]).getMonth() + 1 === 1);
+
+            new WeatherChart(svg)
+                .size(width, height)
+                .icon(weatherIcons)
+                .sort(0)
+                .render(data);
+
+        });
+
+    </script>
+</body>
+</html>
