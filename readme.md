@@ -4,11 +4,11 @@ Using Sankey diagram to visualize historical weather data gives you a different 
 
 The line chart on the bottom represents the trend of daily temperatures. As you hover across the chart, a reference line will follow along with high/low temperatures appearing on the side.
 
-[<img src="https://github.com/analyzer2004/weathersankey/blob/master/images/cover.png" width="960">]
+**For a live demo, see [Sunny day, rainy day in Seattle](https://observablehq.com/@analyzer2004/sunny-day-rainy-day-in-seattle).**
 
 
-
-<div style="font-size:10pt; font-style:italic">Icons made by <a href="https://www.flaticon.com/authors/bqlqn" title="bqlqn">bqlqn</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></div>
+<img src="https://github.com/analyzer2004/weathersankey/blob/master/images/cover.png" width="768">
+<div style="font-size:9pt; font-style:italic">Icons made by <a href="https://www.flaticon.com/authors/bqlqn" title="bqlqn">bqlqn</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></div>
 
 # API Reference
 * **WeatherChart(parent)** - Constructs a new weather chart generator with the default settings. The **parent** can be a SVG or any g.
