@@ -19,14 +19,14 @@ The line chart on the bottom represents the trend of daily temperatures. As you 
   * icon.**overcast** - the url of overcast icon
   * icon.**rain** - the url of rain icon
   * icon.**snow** - the url of snow icon
-* **column(column) ** - Sets the column names for parsing weather csv data and returns this chart.
+* **column(column)** - Sets the column names for parsing weather csv data and returns this chart.
   * column.**date** - the column name of date
   * column.**high** - the column name of the high daily temperature
   * column.**low** - the column name of the low daily temperature
   * column.**condition** - the column name of the daily weather condition
-* **sort(sort) ** - Sets the sort order of the weather conditions and returns this chart.
+* **sort(sort)** - Sets the sort order of the weather conditions and returns this chart.
   * **0** - none (default)
   * **1** - clear to rain
   * **2** - rain to clear
-* **unit(unit) ** - Sets the unit of displayed temperature (default: °F) and returns this chart.
+* **unit(unit)** - Sets the unit of displayed temperature (default: °F) and returns this chart.
 * **render(data) ** - Renders the visualization using specified **MONTHLY** weather data (with columns date, high, low temperatures and condition) and returns this chart.
