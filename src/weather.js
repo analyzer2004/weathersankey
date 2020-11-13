@@ -1,3 +1,4 @@
+// https://github.com/analyzer2004/weathersankey
 // Copyright 2020 Eric Lo
 class WeatherChart {
     constructor(parent) {
