@@ -8,6 +8,14 @@ class WeatherChart {
         this._xr = 1;
         this._leftMargin = 20;
 
+        this._margin = {
+            sankeyTop: 60,
+            sankeyBottom: 25,
+            temp: 15
+        };
+
+        this._tempHeight = 100;        
+
         this._nodes = null;
         this._links = null;
         this._data = null;
@@ -105,13 +113,14 @@ class WeatherChart {
 
         const y = d3.scaleLinear()
             .domain(d3.extent(this._data.flatMap(d => [d.high, d.low])).reverse())
-            .range([0, 100]);
+            .range([0, this._tempHeight]);
 
+        const top = this._height - this._tempHeight - this._margin.temp;
         const g = this._parent.append("g")
             .attr("opacity", 0.7)
-            .attr("transform", `translate(0,${this._height * 0.82})`)
+            .attr("transform", `translate(0,${top})`)
             .call(g => g.append("rect")
-                .attr("width", this._width).attr("height", 100)
+                .attr("width", this._width).attr("height", this._tempHeight)
                 .attr("opacity", 1).attr("fill", "white"))
             .datum(this._data)
             .call(g => drawLine(g, this._highColor, d => d.high))
@@ -147,16 +156,16 @@ class WeatherChart {
         line.append("line")
             .attr("stroke", "#999")
             .attr("x1", 0).attr("y1", 0)
-            .attr("x2", 0).attr("y2", 100);
+            .attr("x2", 0).attr("y2", this._tempHeight);
 
         const high = line.append("text")
             .attr("fill", this._highColor)
             .attr("dy", "-1em")
-            .attr("transform", "translate(5,100)");
+            .attr("transform", `translate(5,${this._tempHeight})`);
 
         const low = line.append("text")
             .attr("fill", this._lowColor)
-            .attr("transform", "translate(5, 100)");
+            .attr("transform", `translate(5,${this._tempHeight})`);
 
         g.on("mouseenter", () => line.attr("opacity", 1))
             .on("mousemove", (e, d) => moveTempLine(e, d))
@@ -187,8 +196,8 @@ class WeatherChart {
                     lb = low.node().getBBox();
                 const w = hb.width > lb.width ? hb.width : lb.width;
                 const tx = pos + w > right ? -w : 5;
-                high.attr("transform", `translate(${tx},100)`);
-                low.attr("transform", `translate(${tx},100)`);
+                high.attr("transform", `translate(${tx},${that._tempHeight})`);
+                low.attr("transform", `translate(${tx},${that._tempHeight})`);
 
                 line.attr("transform", `translate(${pos},0)`);
                 dates
@@ -278,17 +287,18 @@ class WeatherChart {
             .attr("class", "date")
             .attr("fill", "#999")
             .attr("text-anchor", "middle")
-            .attr("transform", d => `translate(${(d.y1 - d.y0) / 2},25)`)
+            .attr("transform", d => `translate(${(d.y1 - d.y0) / 2},${this._margin.sankeyBottom})`)
             .text(d => (new Date(d.id)).getDate());
     }
 
     _sankey(nodes, links) {
+        const sankeyHeight = this._height - this._tempHeight - this._margin.sankeyTop - this._margin.sankeyBottom - this._margin.temp;
         return d3.sankey()
             .nodeId(d => d.id)
             .nodeWidth(10)
             .nodePadding(10)
             .nodeSort(null)
-            .size([this._height * 0.7, this._width - this._leftMargin])({
+            .size([sankeyHeight, this._width - this._leftMargin])({            
                 nodes: nodes.map(d => Object.assign({}, d)),
                 links: links.map(d => Object.assign({}, d))
             });
