@@ -6,6 +6,7 @@ class WeatherChart {
         this._width = 1024;
         this._height = 768;
         this._xr = 1;
+        this._offset = 0;
         this._leftMargin = 20;
 
         this._margin = {
@@ -13,6 +14,7 @@ class WeatherChart {
             sankeyBottom: 25,
             temp: 15
         };
+        this._iconSize = 50;
 
         this._tempHeight = 100;        
 
@@ -34,10 +36,11 @@ class WeatherChart {
         };
     }
 
-    size(width, height, xr) {
+    size(width, height, xr, offset) {
         this._width = width;
         this._height = height;
         this._xr = xr || 1;
+        this._offset = offset || 0;
         return this;
     }
 
@@ -66,18 +69,31 @@ class WeatherChart {
         this._unit = unit;
         return this;
     }
+  
+    tempChartHeight(height) {
+      this._tempHeight = height;
+      return this;
+    }
 
     render(data) {
+        this._init();        
         this._process(data);
         this._drawSankey();
         this._drawTempChart();
         return this;
     }
+  
+    _init() {
+      this._margin.sankeyTop = this._height / 650 * 60;
+      this._iconSize = this._width / 1024 * 50;
+    }
 
     _process(data) {
         const converted = data.map(d => {
             const date = d[this._column.date];
-            const cond = d[this._column.condition].startsWith("Rain") ? "Rain" : d[this._column.condition]; return {
+            var cond = d[this._column.condition];
+            cond = (cond.startsWith("Rain") ? "Rain" : cond.startsWith("Snow") ? "Snow" : cond)            
+            return {
                 date: date,
                 day: new Date(date).getDate(),
                 high: d[this._column.high],
@@ -177,7 +193,7 @@ class WeatherChart {
         const days = this._nodes.filter(d => d.depth === 1);
         const dates = this._parent.selectAll(".date");
         function moveTempLine(e, d) {
-            const px = e.pageX * that._xr;
+            const px = e.pageX * that._xr - that._offset;
             const gap = that._leftMargin - 6; // 6 = tick line
             const pos = px - gap;
 
@@ -209,10 +225,10 @@ class WeatherChart {
     }
 
     _drawSankey() {
-        var that = this;
-
+        var that = this;      
+        
         const g = this._parent.append("g")
-            .attr("transform", `translate(${this._leftMargin},60)`);
+            .attr("transform", `translate(${this._leftMargin},${this._margin.sankeyTop})`);
 
         const nodes = g.append("g")
             .selectAll("g")
@@ -259,20 +275,20 @@ class WeatherChart {
         }
     }
 
-    _addCondition(nodes) {
+    _addCondition(nodes) {        
         nodes.filter(d => d.depth === 0)
             .call(g => g.append("image")
-                .attr("width", 50)
-                .attr("height", 50)
+                .attr("width", this._iconSize)
+                .attr("height", this._iconSize)
                 .attr("opacity", 0.4)
                 .attr("href", d => this._lookup(d.id).icon)
-                .attr("transform", "translate(5,-60)"))
+                .attr("transform", `translate(5,-${this._margin.sankeyTop})`))
             .call(g => g.append("line")
                 .attr("stroke", "#999")
                 .attr("stroke-width", 0.5)
                 .attr("stroke-dasharray", "3,3")
                 .attr("x1", 1).attr("x2", 1)
-                .attr("y1", 0).attr("y2", -50))
+                .attr("y1", 0).attr("y2", -this._margin.sankeyTop))
             .call(g => g.append("text")
                 .attr("class", "days")
                 .attr("fill", d => d3.color(d.color).darker(0.3))
@@ -291,7 +307,7 @@ class WeatherChart {
             .text(d => (new Date(d.id)).getDate());
     }
 
-    _sankey(nodes, links) {
+    _sankey(nodes, links) {        
         const sankeyHeight = this._height - this._tempHeight - this._margin.sankeyTop - this._margin.sankeyBottom - this._margin.temp;
         return d3.sankey()
             .nodeId(d => d.id)

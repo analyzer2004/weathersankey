@@ -12,7 +12,7 @@ The line chart on the bottom represents the trend of daily temperatures. As you 
 
 # API Reference
 * **WeatherChart(parent)** - Constructs a new weather chart generator with the default settings. The **parent** can be a SVG or any g.
-* **size(width, height, xr)** - Sets this chart's dimensions to specified width and height and returns this chart. The xr is the specified width to Notebook's width ratio (it is only for Observable Notebook and is not needed outside of Observable).
+* **size(width, height, xr, offset)** - Sets this chart's dimensions to specified width and height and returns this chart. The offset is the x of the parent element, default is 0. The xr is the specified width to Notebook's width ratio (it is only for Observable Notebook and is not needed outside of Observable).
 * **icon(icon)** - Sets the icon for each weather condition and returns this chart.
   * icon.**clear** - the url of clear icon
   * icon.**cloudy** - the url of cloudy icon
@@ -29,4 +29,5 @@ The line chart on the bottom represents the trend of daily temperatures. As you 
   * **1** - clear to rain
   * **2** - rain to clear
 * **unit(unit)** - Sets the unit of displayed temperature (default: °F) and returns this chart.
-* **render(data) ** - Renders the visualization using specified **MONTHLY** weather data (with columns date, high, low temperatures and condition) and returns this chart.
+* **tempChartHeight(height)** - Sets the height of the temperature line chart and returns this chart. Default is 100.
+* **render(data)** - Renders the visualization using specified **MONTHLY** weather data (with columns date, high, low temperatures and condition) and returns this chart.
