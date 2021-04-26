@@ -5,8 +5,6 @@ class WeatherChart {
         this._parent = parent;
         this._width = 1024;
         this._height = 768;
-        this._xr = 1;
-        this._offset = 0;
         this._leftMargin = 20;
 
         this._margin = {
@@ -36,11 +34,9 @@ class WeatherChart {
         };
     }
 
-    size(width, height, xr, offset) {
+    size(width, height) {
         this._width = width;
         this._height = height;
-        this._xr = xr || 1;
-        this._offset = offset || 0;
         return this;
     }
 
@@ -193,15 +189,15 @@ class WeatherChart {
         const days = this._nodes.filter(d => d.depth === 1);
         const dates = this._parent.selectAll(".date");
         function moveTempLine(e, d) {
-            const px = e.pageX * that._xr - that._offset;
-            const gap = that._leftMargin - 6; // 6 = tick line
-            const pos = px - gap;
+            const
+                converted = that._convertCoordinate(e, g),
+                pos = converted.x;
 
             if (pos >= that._leftMargin) {
                 const left = days[0].y0, right = days[days.length - 1].y1;
                 const index = d3.bisect(
                     d3.range(left, right, days[1].y0 - days[0].y0),
-                    px - that._leftMargin
+                    pos - that._leftMargin
                 );
 
                 const weather = that._data[index - 1];
@@ -344,6 +340,29 @@ class WeatherChart {
 
         function verticalTarget(d) {
             return [d.y1, d.target.x0];
+        }
+    }
+
+    // Utilities
+    //
+    _getSVG() {
+        let curr = this._parent.node();
+        while (curr && curr.tagName !== "svg")
+            curr = curr.parentElement;
+        return curr;
+    }
+
+    _convertCoordinate(e, g) {
+        const svg = this._getSVG();
+        if (svg) {
+            // convert to SVG coordinates
+            const p = svg.createSVGPoint()
+            p.x = e.clientX;
+            p.y = e.clientY;
+            return p.matrixTransform(g.node().getScreenCTM().inverse());
+        }
+        else {
+            throw "Unable to find SVG element";
         }
     }
 }
